@@ -1,14 +1,25 @@
-
-import Header from '../components/Home/Header'
-import Books from '../components/Home/Books'
+import Header from '../components/Header';
+import booksData from '../data/books.json';
+import BooksCard from '../components/BooksCard';
+import { useEffect, useState } from 'react';
 
 const Home = () => {
-    return (
-        <>
-            <Header />
-            <Books />
-        </>
-    )
-}
+  const [books, setBooks] = useState([]);
 
-export default Home
+  useEffect(() => {
+    setBooks(booksData);
+  }, []);
+
+  return (
+    <>
+      <Header />
+      <div>
+        {books.map((book) => (
+          <BooksCard key={book.id} book={book} />
+        ))}
+      </div>
+    </>
+  );
+};
+
+export default Home;

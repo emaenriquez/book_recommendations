@@ -20,7 +20,7 @@ function RegisterPage() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Registro</h2>
+      <h2>Registrarse</h2>
       <div>
         <label>Username</label>
         <input type="text" value={username} onChange={hadleNameChange} placeholder="usuario o email" />

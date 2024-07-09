@@ -1,9 +1,11 @@
 
 import { useState } from "react"
+import { useNavigate } from "react-router"
 
 function LoginPage() {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('hola123')
+  const [password, setPassword] = useState('hola123')
+  const navigate = useNavigate()
 
   const hadleNameChange = (event) => {
     setUsername(event.target.value)
@@ -15,6 +17,13 @@ function LoginPage() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
+    const userNamePre = 'hola123'
+    const userPasswordPre = 'hola123'
+    if(username === userNamePre && password === userPasswordPre ){
+      navigate('/profile')
+    } else {
+      alert('usuario incorrecto')
+    }
     // para enviar los datos al backend y verificar
   }
 

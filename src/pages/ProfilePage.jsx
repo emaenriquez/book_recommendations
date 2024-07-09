@@ -1,13 +1,14 @@
 
+import { Link } from 'react-router-dom'
 
 const Profile = () => {
     return (
         <>
           <ul>
-            <li>Lecturas</li>
+            <Link to={"/lecturas"}>Lecturas</Link>
           </ul>
           <ul>
-            <li>Me interesan</li>
+            <Link to={"/meinteresan"}>Lecturas</Link>
           </ul>
         </>
     )

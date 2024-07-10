@@ -9,20 +9,23 @@ import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
 import Lecturas from './components/Lecturas';
 import Meinteresan from './components/Meinteresan';
+import { GlobalProvider } from './context/ContextGlobal';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/register' element={<RegisterPage />} />
-        <Route path='/profile' element={<ProfilePage />}>
-          <Route path='lecturas' element={<Lecturas />} />
-          <Route path='meinteresan' element={<Meinteresan />} />
-        </Route>
-      </Routes>
-    </Router>
+    <GlobalProvider>
+      <Router>
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/login' element={<LoginPage />} />
+          <Route path='/register' element={<RegisterPage />} />
+          <Route path='/profile' element={<ProfilePage />}>
+            <Route path='lecturas' element={<Lecturas />} />
+            <Route path='meinteresan' element={<Meinteresan />} />
+          </Route>
+        </Routes>
+      </Router>
+    </GlobalProvider>
   );
 }
 

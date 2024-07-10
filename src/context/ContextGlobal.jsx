@@ -4,6 +4,7 @@ export const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
   const [readBooks, setBooks] = useState([]);
+  const [interestedBooks,setInterestedBooks] = useState([])
 
   const addBookToRead = (book) => {
     console.log("Adding book:", book); // Log para verificar
@@ -16,8 +17,19 @@ export const GlobalProvider = ({ children }) => {
     });
   };
 
+  const addBookToInterested = (book) => {
+    console.log("Adding book:", book); // Log para verificar
+    setInterestedBooks((prevBooks) => {
+      // Evitar duplicados
+      if (prevBooks.some(b => b.id === book.id)) {
+        return prevBooks;
+      }
+      return [...prevBooks, book];
+    });
+  }
+
   return (
-    <GlobalContext.Provider value={{ readBooks, addBookToRead }}>
+    <GlobalContext.Provider value={{ readBooks, addBookToRead, interestedBooks , addBookToInterested }}>
       {children}
     </GlobalContext.Provider>
   );

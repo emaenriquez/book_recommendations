@@ -1,17 +1,9 @@
+import Profile from '../components/Profile';
 
-import { Link } from 'react-router-dom'
-
-const Profile = () => {
+const ProfilePage = () => {
     return (
-        <>
-          <ul>
-            <Link to={"/lecturas"}>Lecturas</Link>
-          </ul>
-          <ul>
-            <Link to={"/meinteresan"}>Lecturas</Link>
-          </ul>
-        </>
-    )
+        <Profile />
+    );
 }
 
-export default Profile
+export default ProfilePage;

@@ -1,7 +1,10 @@
 
 function Meinteresan() {
   return (
-    <div>Meinteresan</div>
+    <div>
+            <h2>Me Interesan</h2>
+            <p>Contenido de la sección Me Interesan...</p>
+        </div>
   )
 }
 

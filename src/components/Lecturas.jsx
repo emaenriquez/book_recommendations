@@ -1,7 +1,10 @@
 
 function Lecturas() {
   return (
-    <div>Lecturas</div>
+    <div>
+    <h2>Lecturas</h2>
+    <p>Contenido de la sección Lecturas...</p>
+</div>
   )
 }
 

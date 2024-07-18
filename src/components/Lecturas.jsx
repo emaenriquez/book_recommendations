@@ -4,8 +4,6 @@ import { GlobalContext } from "../context/ContextGlobal";
 function Lecturas() {
   const { readBooks } = useContext(GlobalContext);
 
-  console.log("Libros leídos:", readBooks); // Log para verificar
-
   return (
     <div>
       <h2>Lecturas</h2>

@@ -1,46 +1,70 @@
-
-import { useState } from "react"
-import { useNavigate } from "react-router"
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { GlobalContext } from "../context/ContextGlobal";
 
 function LoginPage() {
-  const [username, setUsername] = useState('hola123')
-  const [password, setPassword] = useState('hola123')
-  const navigate = useNavigate()
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const { login } = useContext(GlobalContext);
 
-  const hadleNameChange = (event) => {
-    setUsername(event.target.value)
-  }
+  const handleNameChange = (event) => {
+    setUsername(event.target.value);
+  };
 
-  const hadlePasswordChange = (event) => {
-    setPassword(event.target.value)
-  }
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
 
-  const handleSubmit = (event) => {
-    event.preventDefault()
-    const userNamePre = 'hola123'
-    const userPasswordPre = 'hola123'
-    if(username === userNamePre && password === userPasswordPre ){
-      navigate('/profile')
-    } else {
-      alert('usuario incorrecto')
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError('');
+
+    const body = {
+      username: username,
+      password: password
+    };
+
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/auth/login/', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+      });
+
+      if (response.status === 401) {
+        setError("Invalid username or password.");
+      } else if (response.ok) {
+        const data = await response.json();
+        login(data.token, { username }); // Assuming user data contains only username for simplicity
+        navigate("/profile");
+      } else {
+        setError("Login failed. Please try again later.");
+      }
+    } catch (error) {
+      console.error("Error logging in:", error);
+      setError("Failed to login. Please try again later.");
     }
-    // para enviar los datos al backend y verificar
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>iniciar sesion</h2>
+      <h2>Iniciar sesión</h2>
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <div>
         <label>Username</label>
-        <input type="text" value={username} onChange={hadleNameChange} placeholder="usuario o email" />
+        <input type="text" value={username} onChange={handleNameChange} placeholder="usuario o email" />
       </div>
       <div>
         <label>Password</label>
-        <input type="text" value={password} onChange={hadlePasswordChange} placeholder="contraseña" />
+        <input type="password" value={password} onChange={handlePasswordChange} placeholder="contraseña" />
       </div>
       <button type="submit">Ingresar</button>
     </form>
-  )
+  );
 }
 
-export default LoginPage
+export default LoginPage;

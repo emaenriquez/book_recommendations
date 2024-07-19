@@ -1,8 +1,8 @@
-import { useContext, useState, useEffect,  } from "react";
+import { useContext, useState, useEffect } from "react";
 import { GlobalContext } from "../context/ContextGlobal";
 
 const BooksCard = ({ book }) => {
-  const { addBookToRead, readBooks , interestedBooks , addBookToInterested } = useContext(GlobalContext);
+  const { addBookToRead, readBooks, interestedBooks, addBookToInterested } = useContext(GlobalContext);
   const [isChecked, setIsChecked] = useState(false);
   const [isInterestedChecked, setIsInterestedChecked] = useState(false);
 
@@ -13,10 +13,10 @@ const BooksCard = ({ book }) => {
       setIsChecked(false);
     }
   }, [readBooks, book.id]);
-  
+
   useEffect(() => {
     setIsInterestedChecked(interestedBooks.some((b) => b.id === book.id));
-  }, [interestedBooks, book.id])
+  }, [interestedBooks, book.id]);
 
   const handleCheckboxChange = () => {
     if (!isChecked) {

@@ -5,9 +5,10 @@ import { GlobalContext } from "../context/ContextGlobal";
 function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  // const [error, setError] = useState('');
   const navigate = useNavigate();
   const { login } = useContext(GlobalContext);
+  let error;
 
   const handleNameChange = (event) => {
     setUsername(event.target.value);
@@ -19,7 +20,6 @@ function LoginPage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError('');
 
     const body = {
       username: username,
@@ -35,18 +35,17 @@ function LoginPage() {
         body: JSON.stringify(body)
       });
 
-      if (response.status === 401) {
-        setError("Invalid username or password.");
-      } else if (response.ok) {
+      if (response.ok) {
+       
         const data = await response.json();
         login(data.token, { username }); // Assuming user data contains only username for simplicity
         navigate("/profile");
       } else {
-        setError("Login failed. Please try again later.");
+        error =  "Invalid username or password."
       }
     } catch (error) {
       console.error("Error logging in:", error);
-      setError("Failed to login. Please try again later.");
+      error = "Failed to login. Please try again later."
     }
   };
 

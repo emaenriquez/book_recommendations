@@ -3,13 +3,14 @@ import { useContext, useEffect } from 'react';
 import { GlobalContext } from '../context/ContextGlobal';
 
 const Profile = () => {
-    const { user, fetchReadBooks } = useContext(GlobalContext);
+    const { user, fetchReadBooks, fetchInterestedBooks  } = useContext(GlobalContext);
 
     useEffect(() => {
         if (user) {
             fetchReadBooks();
+            fetchInterestedBooks();
         }
-    }, [user, fetchReadBooks]);
+    }, [user, fetchReadBooks, fetchInterestedBooks]);
 
     return (
         <div style={{ display: 'flex' }}>

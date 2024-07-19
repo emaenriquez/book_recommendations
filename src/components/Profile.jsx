@@ -9,13 +9,13 @@ const Profile = () => {
         if (user) {
             fetchReadBooks();
         }
-    }, [user]);
+    }, [user, fetchReadBooks]);
 
     return (
         <div style={{ display: 'flex' }}>
             <div style={{ marginRight: '20px' }}>
                 <img src='/perfil.jpeg' style={{ width: '200px', height: '200px', borderRadius: '50%', objectFit: 'cover' }} alt="Profile" />
-                <h2>{user.username}</h2>
+                <h2>{user?.username}</h2>
                 <ul>
                     <li><Link to="lecturas">Lecturas</Link></li>
                     <li><Link to="meinteresan">Me Interesan</Link></li>

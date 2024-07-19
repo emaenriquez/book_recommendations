@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useCallback } from "react";
 
 export const GlobalContext = createContext();
 
@@ -6,44 +6,56 @@ export const GlobalProvider = ({ children }) => {
   const [readBooks, setBooks] = useState([]);
   const [interestedBooks, setInterestedBooks] = useState([]);
   const [user, setUser] = useState(null);
+  const [userToken, setUserToken] = useState(null);
+  const [apiToken] = useState('4daf245377d9cbb9efe6df19c2ca68beac644cd4');
 
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      // Aquí deberías obtener la información real del usuario basado en el token
-      setUser({ username: "usuario" }); // Ajusta esta línea según sea necesario
-      fetchReadBooks();
+  const fetchReadBooks = useCallback(async () => {
+    if (!userToken) {
+      console.error("No user token found");
+      return;
     }
-  }, []);
-
-  const fetchReadBooks = async () => {
     try {
       const response = await fetch('http://127.0.0.1:8000/api/my_books_read/', {
         method: 'GET',
         headers: {
-          Authorization: `Token 4daf245377d9cbb9efe6df19c2ca68beac644cd4`
+          'Authorization': `Token ${apiToken}`,
         }
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       const data = await response.json();
-      setBooks(data);
+      setBooks(Array.isArray(data.data) ? data.data : []);
     } catch (error) {
       console.error("Error fetching read books:", error);
     }
-  };
+  }, [apiToken, userToken]);
 
-  const addBookToRead = async (book) => {
+  const addBookToRead = useCallback(async (book) => {
+    if (!userToken) {
+      console.error("No user token found");
+      return;
+    }
+
     try {
-      const token = localStorage.getItem('token');
-      await fetch('http://127.0.0.1:8000/api/book_read/', {
+      const response = await fetch('http://127.0.0.1:8000/api/book_read/', {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Authorization': `Token ${apiToken}`,
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          book: book.id 
+        body: JSON.stringify({
+          book: book.id
         })
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
       setBooks((prevBooks) => {
         if (prevBooks.some(b => b.id === book.id)) {
           return prevBooks;
@@ -53,7 +65,15 @@ export const GlobalProvider = ({ children }) => {
     } catch (error) {
       console.error("Error adding book to read:", error);
     }
-  };
+  }, [apiToken, userToken]);
+
+  useEffect(() => {
+    const storedUserToken = localStorage.getItem('token');
+    if (storedUserToken) {
+      setUserToken(storedUserToken);
+      fetchReadBooks();
+    }
+  }, [fetchReadBooks]);
 
   const addBookToInterested = (book) => {
     setInterestedBooks((prevBooks) => {
@@ -66,25 +86,29 @@ export const GlobalProvider = ({ children }) => {
 
   const login = (token, userData) => {
     localStorage.setItem('token', token);
+    setUserToken(token);
     setUser(userData);
-    fetchReadBooks(); // Fetch read books on login
+    fetchReadBooks();
   };
 
   const logout = () => {
     localStorage.removeItem('token');
+    setUserToken(null);
     setUser(null);
-    setBooks([]); // Clear books on logout
+    setBooks([]);
   };
 
   return (
-    <GlobalContext.Provider value={{ 
+    <GlobalContext.Provider value={{
       readBooks,
       addBookToRead,
       interestedBooks,
       addBookToInterested,
       user,
+      userToken,
       login,
-      logout 
+      logout,
+      fetchReadBooks
     }}>
       {children}
     </GlobalContext.Provider>

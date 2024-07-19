@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect,  } from "react";
 import { GlobalContext } from "../context/ContextGlobal";
 
 const BooksCard = ({ book }) => {
@@ -7,12 +7,16 @@ const BooksCard = ({ book }) => {
   const [isInterestedChecked, setIsInterestedChecked] = useState(false);
 
   useEffect(() => {
-    setIsChecked(readBooks.some((b) => b.id === book.id));
+    if (Array.isArray(readBooks)) {
+      setIsChecked(readBooks.some((b) => b.id === book.id));
+    } else {
+      setIsChecked(false);
+    }
   }, [readBooks, book.id]);
-
+  
   useEffect(() => {
     setIsInterestedChecked(interestedBooks.some((b) => b.id === book.id));
-  },[interestedBooks, book.id])
+  }, [interestedBooks, book.id])
 
   const handleCheckboxChange = () => {
     if (!isChecked) {
@@ -21,7 +25,7 @@ const BooksCard = ({ book }) => {
     setIsChecked(!isChecked);
   };
 
-  const hafleCheckboxInterestedChange = () => {
+  const handleCheckboxInterestedChange = () => {
     if (!isInterestedChecked) {
       addBookToInterested(book);
     }
@@ -49,7 +53,7 @@ const BooksCard = ({ book }) => {
         <input
           type="checkbox"
           checked={isInterestedChecked}
-          onChange={hafleCheckboxInterestedChange}
+          onChange={handleCheckboxInterestedChange}
         />
         Marcar interesado
       </label>

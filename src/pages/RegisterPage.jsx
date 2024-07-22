@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { registerUser } from '../services/api';
 
 function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -8,48 +9,21 @@ function RegisterPage() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
-  };
+  const handleUsernameChange = (event) => setUsername(event.target.value);
 
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
+  const handleEmailChange = (event) => setEmail(event.target.value);
 
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
+  const handlePasswordChange = (event) => setPassword(event.target.value);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
 
-    const body = {
-      username: username,
-      email: email,
-      password: password
-    };
-
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/auth/register/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(body)
-      });
-
-      if (response.status === 400) {
-        const data = await response.json();
-        if (data.username && data.username.includes("A user with that username already exists.")) {
-          setError("A user with that username already exists.");
-        }
-      } else if (response.ok) {
-        navigate("/login");
-      }
-    } catch (error) {
-      console.error("Error registering user:", error);
-      setError("Failed to register. Please try again later.");
+      await registerUser(username, email, password);
+      navigate("/login");
+    } catch (err) {
+      setError(err.message);
     }
   };
 

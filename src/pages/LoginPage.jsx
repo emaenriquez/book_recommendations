@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { GlobalContext } from "../context/ContextGlobal";
+import { loginUser } from "../services/api"
 
 function LoginPage() {
   const [username, setUsername] = useState('');
@@ -18,36 +19,18 @@ function LoginPage() {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
 
-    const body = {
-      username: username,
-      password: password
-    };
-
+  const handleSubmit  = async (e) => {
+    e.preventDefault()
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/auth/login/', {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(body)
-      });
-
-      if (response.ok) {
-       
-        const data = await response.json();
-        login(data.token, { username }); // Assuming user data contains only username for simplicity
-        navigate("/profile");
-      } else {
-        error =  "Invalid username or password."
-      }
-    } catch (error) {
-      console.error("Error logging in:", error);
-      error = "Failed to login. Please try again later."
+      const data = await loginUser(username, password);
+      login(data.token, { username }); // Assuming user data contains only username for simplicity
+      navigate("/profile");
+    } catch (err) {
+      console.log(err)
     }
   };
+
 
   return (
     <form onSubmit={handleSubmit}>

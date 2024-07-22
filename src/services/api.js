@@ -194,3 +194,54 @@ export const registerUser = async (username, email, password) => {
   }
 };
 
+export const rateBook = async (bookId, rating) => {
+  try {
+    const response = await fetch('http://localhost:8000/api/book_rating/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Token ${apiToken}`,
+      },
+      body: JSON.stringify({ book: bookId, rating: rating })
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (data.status === 'success') {
+      return data.data;
+    } else {
+      throw new Error('Failed to rate book: ' + data.message);
+    }
+  } catch (error) {
+    console.error("Error rating book:", error);
+    return null;
+  }
+};
+
+
+export const fetchMyBookRatings = async () => {
+  try {
+    const response = await fetch('http://localhost:8000/api/my_books_rating/', {
+      headers: {
+        'Authorization': `Token ${apiToken}`,
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (data.status === 'success') {
+      return data.data;
+    } else {
+      throw new Error('Failed to fetch book ratings: ' + data.message);
+    }
+  } catch (error) {
+    console.error("Error fetching book ratings:", error);
+    return [];
+  }
+};

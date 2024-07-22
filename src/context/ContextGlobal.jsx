@@ -1,5 +1,12 @@
 import React, { createContext, useState, useEffect, useCallback } from "react";
-import { fetchReadBooks, addBookToRead, fetchInterestedBooks, addBookToInterested } from '../services/api';
+import { 
+  fetchReadBooks, 
+  addBookToRead, 
+  fetchInterestedBooks, 
+  addBookToInterested, 
+  rateBook, 
+  fetchMyBookRatings } 
+from '../services/api';
 
 export const GlobalContext = createContext();
 
@@ -43,14 +50,23 @@ export const GlobalProvider = ({ children }) => {
     }
   }, [userToken]);
 
+  const handleRateBook = useCallback(async ( bookId,Rating ) => {
+    const rateBook = await rateBook(bookId,Rating)
+  },[userToken])
+
+  const handleFetchMyBookRatings = useCallback( async () => {
+    const ratings = await fetchMyBookRatings();
+  },[userToken])
+
   useEffect(() => {
     const storedUserToken = localStorage.getItem('token');
     if (storedUserToken) {
       setUserToken(storedUserToken);
       handleFetchReadBooks();
       handleFetchInterestedBooks();
+      handleFetchMyBookRatings()
     }
-  }, [handleFetchReadBooks, handleFetchInterestedBooks]);
+  }, [handleFetchReadBooks, handleFetchInterestedBooks,handleFetchMyBookRatings]);
 
   const login = (token, userData) => {
     localStorage.setItem('token', token);
@@ -80,6 +96,8 @@ export const GlobalProvider = ({ children }) => {
       fetchInterestedBooks: handleFetchInterestedBooks,
       addBookToRead: handleAddBookToRead,
       addBookToInterested: handleAddBookToInterested,
+      rateBook: handleRateBook,
+      fetchMyBookRatings: handleFetchMyBookRatings,
     }}>
       {children}
     </GlobalContext.Provider>

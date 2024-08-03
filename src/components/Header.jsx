@@ -1,40 +1,70 @@
-
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import { Link } from "react-router-dom";
 import { GlobalContext } from "../context/ContextGlobal";
-import { Link } from 'react-router-dom'
+import '../styles/Header.css'
 
 const Header = () => {
-    const { user, logout } = useContext(GlobalContext)
-    return <header>
-        <h1>Books Recommendations</h1>
-        <nav>
-            {
-                user ? (
-                    <ul>
-                        <li>
-                            <img src="/perfil.jpeg" alt="Profile" style={{ width: '30px', height: '30px', borderRadius: '50%' }} />
-                        </li>
-                        <li>
-                            <button onClick={logout}>Cerrar sesión</button>
-                        </li>
-                        <li>
-                            <Link to={'/profile'}>Mi perfil</Link>
-                        </li>
-                    </ul>
-                ) : (
-                    <ul>
-                        <li>
-                            <Link to="/login">Iniciar sesion</Link>
-                        </li>
-                        <li>
-                            <Link to="/registrar">Registrarme</Link>
-                        </li>
-                    </ul>
-                )
-            }
+  const { user, logout } = useContext(GlobalContext);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
 
-        </nav>
+  const toggleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
+  };
+
+  const toggleHamburger = () => {
+    setIsHamburgerOpen((prev) => !prev);
+  };
+
+  return (
+    <header className="header">
+      <h1 className="header__title">Books Recommendations</h1>
+      <nav className={`header__nav ${isHamburgerOpen ? "header__nav--open" : ""}`}>
+        {user ? (
+          <div className="header__user">
+            <img
+              src="/perfil.jpeg"
+              alt="Profile"
+              className="header__profile-img"
+              onClick={toggleMenu}
+            />
+            {isMenuOpen && (
+              <div className="header__dropdown-menu">
+                <ul className="header__dropdown-list">
+                  <li className="header__dropdown-item">
+                    <button className="header__logout-btn" onClick={logout}>
+                      Cerrar sesión
+                    </button>
+                  </li>
+                  <li className="header__dropdown-item">
+                    <Link className="header__link" to="/profile">
+                      Mi perfil
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+        ) : (
+          <ul className="header__list">
+            <li className="header__item">
+              <Link className="header__link" to="/login">
+                Iniciar sesión
+              </Link>
+            </li>
+            <li className="header__item">
+              <Link className="header__link" to="/registrar">
+                Registrarme
+              </Link>
+            </li>
+          </ul>
+        )}
+      </nav>
+      <div className="header__hamburger" onClick={toggleHamburger}>
+        ☰
+      </div>
     </header>
-}
+  );
+};
 
-export default Header
+export default Header;

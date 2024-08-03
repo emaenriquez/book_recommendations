@@ -3,13 +3,12 @@ import { Navigate } from "react-router-dom";
 import { GlobalContext } from "../context/ContextGlobal";
 
 const ProtectedRoute = ({ children }) => {
-  const { user } = useContext(GlobalContext);
+  const { userToken } = useContext(GlobalContext);
 
-  if (!user) {
+  if (!userToken) { // Verificar si existe el token
     return <Navigate to="/login" />;
   }
 
   return children;
 };
-
-export default ProtectedRoute;
+export default ProtectedRoute

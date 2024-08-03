@@ -4,7 +4,7 @@ let apiToken = '4daf245377d9cbb9efe6df19c2ca68beac644cd4'
 export const setApiToken = (token) => {
   apiToken = token;
 };
-
+// Función para obtener los libros leidos
 export const fetchReadBooks = async (userToken) => {
     if (!userToken) {
       console.error("No user token found");
@@ -30,7 +30,7 @@ export const fetchReadBooks = async (userToken) => {
       return [];
     }
 };
-  
+// Función para añadir libros a leidos
 export const addBookToRead = async (userToken, book) => {
     if (!userToken) {
       console.error("No user token found");
@@ -60,7 +60,7 @@ export const addBookToRead = async (userToken, book) => {
       return null;
     }
 };
-  
+// Función para mostrar los libros de me interesan
 export const fetchInterestedBooks = async () => {
     try {
       const response = await fetch('http://127.0.0.1:8000/api/my_books_like/', {
@@ -77,7 +77,7 @@ export const fetchInterestedBooks = async () => {
       return [];
     }
 };
-  
+// Función para añadir libros a me interesan
 export const addBookToInterested = async (userToken, book) => {
     if (!userToken) {
       console.error("No user token found");
@@ -108,12 +108,13 @@ export const addBookToInterested = async (userToken, book) => {
     }
 };
 
-
+// Función para obtener libros
 export const fetchBooks = async () => {
   try {
     const response = await fetch('http://127.0.0.1:8000/api/books/', {
       headers: {
         'Authorization': `Token ${apiToken}`,
+        'Content-Type': 'application/json',
       }
     });
 
@@ -132,7 +133,7 @@ export const fetchBooks = async () => {
     return [];
   }
 };
-
+// Función para loguear un libro
 export const loginUser = async (username, password) => {
   const body = {
     username,
@@ -161,7 +162,7 @@ export const loginUser = async (username, password) => {
   }
 };
 
-
+// Función para registrar usuarios
 export const registerUser = async (username, email, password) => {
   const body = {
     username,
@@ -194,6 +195,7 @@ export const registerUser = async (username, email, password) => {
   }
 };
 
+// Función para calificar un libro
 export const rateBook = async (bookId, rating) => {
   try {
     const response = await fetch('http://localhost:8000/api/book_rating/', {
@@ -221,12 +223,12 @@ export const rateBook = async (bookId, rating) => {
   }
 };
 
-
 export const fetchMyBookRatings = async () => {
   try {
     const response = await fetch('http://localhost:8000/api/my_books_rating/', {
       headers: {
         'Authorization': `Token ${apiToken}`,
+        'Content-Type': 'application/json',
       }
     });
 
@@ -235,7 +237,9 @@ export const fetchMyBookRatings = async () => {
     }
 
     const data = await response.json();
+    console.log(data)
     if (data.status === 'success') {
+      // console.log(data.data)
       return data.data;
     } else {
       throw new Error('Failed to fetch book ratings: ' + data.message);

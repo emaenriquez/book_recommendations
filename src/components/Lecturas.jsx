@@ -1,25 +1,26 @@
 import { useContext } from "react";
 import { GlobalContext } from "../context/ContextGlobal";
+import '../styles/Profile.css'
 
 function Lecturas() {
   const { readBooks } = useContext(GlobalContext);
 
   return (
-    <div>
-      <h2>Lecturas</h2>
-      {readBooks.length === 0 ? (
-        <p>No hay libros leídos</p>
-      ) : (
+    <main className="books-list">
+      {readBooks.length === 0 ? ( <p>No hay libros leídos</p>) : (
         readBooks.map((book) => (
-          <div key={book.id} className="books-card">
-            <img src={book.thumbnail} alt="portada" />
-            <h2>{book.title}</h2>
-            <h3>{book.subtitle}</h3>
-            <p>{book.description}</p>
-          </div>
+          <section key={book.id} className="books-card">
+            <img src={book.thumbnail} alt="portada" className="books-card__image" />
+            <h2 className="books-card__title">{book.title}</h2>
+            <h3 className="books-card__subtitle">{book.subtitle}</h3>
+            <details className="books-card__details">
+                <summary>Haz click para ver la descripción</summary>
+                <p className="books-card__description">{book.description}</p>
+            </details>
+          </section>
         ))
       )}
-    </div>
+    </main>
   );
 }
 

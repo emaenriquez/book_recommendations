@@ -1,34 +1,32 @@
-import Header from '../components/Header';
-import BooksCard from '../components/BooksCard';
-import { useEffect, useState, useContext } from 'react';
-import { fetchBooks } from '../services/api';
+import { useContext, useEffect, useState } from 'react';
 import { GlobalContext } from '../context/ContextGlobal';
+import BooksCard from '../components/BooksCard';
+import Header from '../components/Header';
+import { fetchBooks } from '../services/api';
 
 const Home = () => {
   const [books, setBooks] = useState([]);
+  const { bookRatings } = useContext(GlobalContext); // Obtener las calificaciones del contexto
 
-  const { rateBook } = useContext(GlobalContext)
-
-  useEffect(()=> {
-    const getBooks = async ( ) => {
-      const bookData = await fetchBooks()
-      setBooks(bookData)
+  useEffect(() => {
+    const getBooks = async () => {
+      const bookData = await fetchBooks();
+      setBooks(bookData);
     }
-    getBooks()
-  },[])
-
-  const handleRate = async (bookId, rating) => {
-    await rateBook(bookId, rating);
-  };
+    getBooks();
+  }, []);
 
   return (
     <>
       <Header />
-      <div>
-        {books.map((book) => (
-          <BooksCard key={book.id} book={book} onRate={handleRate}  />
-        ))}
-      </div>
+      <main className="books-container">
+        {books.map((book) => {
+          const rating = bookRatings.find(r => r.book === book.id)?.rating || 0; // Obtener calificación del libro
+          return (
+            <BooksCard key={book.id} book={book} ratingProps={rating} />
+          );
+        })}
+      </main>
     </>
   );
 };
